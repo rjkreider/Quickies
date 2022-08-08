@@ -49,32 +49,32 @@ $notes_count = Note::AllObjectsCount();
 
     <head>
         <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-    	<title><?=htmlspecialchars($page_title)?></title>
+    	<title><?php echo htmlspecialchars($page_title)?></title>
     	<link href="style.css" rel="stylesheet" type="text/css" />
         <link rel="shortcut icon" href="/favicon.ico" />
     </head>
 
     <body>
  
-        <div id="pageTitle"><?=$title_faq?></div>
+        <div id="pageTitle"><?php echo $title_faq?></div>
 
-        <p>[<a href="<?=$PHP_SELF?>">categories</a>] 
-           [<a href="<?=$PHP_SELF?>?index">index</a>] 
-           [<a href="<?=$PHP_SELF?>?all">all (<?=$notes_count?>)</a>] 
-           [<a href="<?=$PHP_SELF?>?latest">latest</a>]</p>
+        <p>[<a href="<?php echo $_SERVER['PHP_SELF']; ?>">categories</a>] 
+           [<a href="<?php echo $_SERVER['PHP_SELF']; ?>?index">index</a>] 
+           [<a href="<?php echo $_SERVER['PHP_SELF']; ?>?all">all (<?php echo $notes_count?>)</a>] 
+           [<a href="<?php echo $_SERVER['PHP_SELF']; ?>?latest">latest</a>]</p>
 
         <div id="searchForm">
-        <form action='<?=$PHP_SELF?>' method='post'>
+        <form action='<?php echo $_SERVER['PHP_SELF']; ?>' method='post'>
         <table>
             <tr>
-                <td><input type='text' name='search_string' value='<?=$req_search_string?>' /></td>
+                <td><input type='text' name='search_string' value='<?php echo $req_search_string?>' /></td>
                 <td><input type='submit' class='submit' value='Search' /></td>
             </tr>
         </table>
         </form>
 
         </div>      
-<?
+<?php
 
 $current_cat_id = "";
 
@@ -83,12 +83,12 @@ foreach($notes as $n) {
     if($n->category_id != $current_cat_id) {
         
         if($display_mode == 'categories') {
-            echo "<div class=\"catTitleSmall\"><a href=\"$PHP_SELF?cat=$n->category_id\">".$n->category_name." (".count(Note::NotesWithCatId($n->category_id)).")</a></div>\n";                                                                        
+            echo "<div class=\"catTitleSmall\"><a href=\"".$_SERVER['PHP_SELF']."?cat=$n->category_id\">".$n->category_name." (".count(Note::NotesWithCatId($n->category_id)).")</a></div>\n";                                                                        
         } else {
             if($current_cat_id != "") {
                 echo "</ol>\n";
             }
-            echo "<div class=\"catTitleBig\"><a href=\"$PHP_SELF?cat=$n->category_id\">".$n->category_name."</a></div>\n";                                                
+            echo "<div class=\"catTitleBig\"><a href=\"".$_SERVER['PHP_SELF']."?cat=$n->category_id\">".$n->category_name."</a></div>\n";                                                
             echo "<ol>\n";
         }
         
@@ -97,12 +97,12 @@ foreach($notes as $n) {
         
     if($display_mode == 'contents') {
         echo "<li class=\"itemsList\">\n";
-        echo "<div class=\"noteTitleBig\"><a href=\"".$PHP_SELF."?id=".$n->id."\">".$n->title."</a></div>\n";
+        echo "<div class=\"noteTitleBig\"><a href=\"".$_SERVER['PHP_SELF']."?id=".$n->id."\">".$n->title."</a></div>\n";
         echo "<div class=\"noteText\">".Markdown($n->text)."</div>\n";
         echo "</li>\n";
     } else if ($display_mode == 'titles') {
         echo "<li class=\"itemsList\">\n";
-        echo "<div class=\"noteTitleSmall\"><a href=\"$PHP_SELF?id=$n->id\">".$n->title."</a></div>\n";
+        echo "<div class=\"noteTitleSmall\"><a href=\"".$_SERVER['PHP_SELF']."?id=$n->id\">".$n->title."</a></div>\n";
         echo "</li>\n";
     } else if ($display_mode == 'categories') {
         // nothing
@@ -121,21 +121,7 @@ if($display_mode == 'titles') {
 
 ?>
 
-     <div id="footer"><?=$footer_text?></div>
-
-	<script type="text/javascript">
-
-	  var _gaq = _gaq || [];
-	  _gaq.push(['_setAccount', 'UA-987064-3']);
-	  _gaq.push(['_trackPageview']);
-
-	  (function() {
-	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-	  })();
-
-	</script>
+     <div id="footer"><?php echo $footer_text?></div>
 
     </body>
 </html>

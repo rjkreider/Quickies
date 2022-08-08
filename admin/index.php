@@ -1,4 +1,5 @@
-<?ob_start();
+<?php
+ob_start();
 
 header("Content-Type: text/html; charset=utf-8");
 include_once "config.inc";
@@ -27,16 +28,16 @@ if(isset($_GET['categories'])) {
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-	<title><?=$title_faq?></title>
+	<title><?php echo $title_faq?></title>
 	<link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
 
-    <div id="pageTitle"><?=$title_faq?></div>
+    <div id="pageTitle"><?php echo $title_faq?></div>
 
-    <p>[<a href="<?=$PHP_SELF?>">notes</a>] [<a href="<?=$PHP_SELF?>?categories">categories</a>]</p>
+    <p>[<a href="<?php echo $_SERVER['PHP_SELF']; ?>">notes</a>] [<a href="<?php echo $_SERVER['PHP_SELF']; ?>?categories">categories</a>]</p>
 
-<?
+<?php
 
 if($display_mode == 'categories') {
 
@@ -53,16 +54,16 @@ if($display_mode == 'categories') {
             
             // TODO: add status
             
-    		header("Location: $PHP_SELF?categories");
+    		header("Location: ".$_SERVER['PHP_SELF']."?categories");
     		exit;
     	}
 
     	if ($req_cancel_delete) {
-    	    header("Location: $PHP_SELF?categories");
+    	    header("Location: ".$_SERVER['PHP_SELF']."?categories");
     		exit;
     	}
         
-        echo "<form method=\"post\" action=\"$PHP_SELF?categories&action=delete&cat=$c->id\">\n";
+        echo "<form method=\"post\" action=\"".$_SERVER['PHP_SELF']."?categories&action=delete&cat=$c->id\">\n";
     		echo "Do you really want to delete category $c->id - ".stripslashes($c->name)."?<br>\n";
     		echo "<input type=\"submit\" name=\"cancel_delete\" value=\"Cancel\">\n";
     		echo "<input type=\"submit\" name=\"confirm_delete\" value=\"Delete\">\n";
@@ -76,7 +77,7 @@ if($display_mode == 'categories') {
 
         $c = Category::CategoryWithId($req_cat_id);
         
-        $action_link = $PHP_SELF."?categories&action=update&cat=".$req_cat_id;
+        $action_link = $_SERVER['PHP_SELF']."?categories&action=update&cat=".$req_cat_id;
         $button_title = "Edit";
     } else {
         /////////////////////////
@@ -84,7 +85,7 @@ if($display_mode == 'categories') {
         /////////////////////////
         
         $c = null;
-        $action_link = $PHP_SELF."?categories&action=create";
+        $action_link = $_SERVER['PHP_SELF']."?categories&action=create";
         $button_title = "Create";
     }
     
@@ -99,12 +100,12 @@ if($display_mode == 'categories') {
 
     if ($action == 'create') {
         Category::Create($req_cat_name);
-    	header("Location: $PHP_SELF?categories");
+    	header("Location: ".$_SERVER['PHP_SELF']."?categories");
     	exit;
     } else if ($action == 'update') {
         $cat = Category::CategoryWithId($req_cat_id);
         $cat->update($req_cat_name);
-    	header("Location: $PHP_SELF?categories");
+    	header("Location: ".$_SERVER['PHP_SELF']."?categories");
     	exit;
     }
 
@@ -156,18 +157,18 @@ if($display_mode == 'categories') {
                 exit;
             }
             
-    		header("Location: $PHP_SELF?notes");
+    		header("Location: ".$_SERVER['PHP_SELF']."?notes");
     		exit;
     	}
 
     	if ($req_cancel_delete) {
-    	    header("Location: $PHP_SELF?notes");
+    	    header("Location: ".$_SERVER['PHP_SELF']."?notes");
     		exit;
     	}
         
         $n = Note::NoteWithIdNoCategory($req_note_id);
 
-        echo "<form method=\"post\" action=\"$PHP_SELF?notes&action=delete&id=$n->id\">\n";
+        echo "<form method=\"post\" action=\"".$_SERVER['PHP_SELF']."?notes&action=delete&id=$n->id\">\n";
     		echo "Do you really want to delete note $req_note_id - ".stripslashes($n->title)."?<br>\n";
     		echo "<input type=\"submit\" name=\"cancel_delete\" value=\"Cancel\">\n";
     		echo "<input type=\"submit\" name=\"confirm_delete\" value=\"Delete\">\n";
@@ -179,15 +180,15 @@ if($display_mode == 'categories') {
     /////////////////////////
     ?>
     <div id="searchForm">
-    <form action='<?=$PHP_SELF?>' method='post'>
+    <form action='<?php echo $_SERVER['PHP_SELF']; ?>' method='post'>
     <table>
         <tr>
-            <td><input type='text' name='search_string' value='<?=htmlentities($req_search_string)?>' /></td>
+            <td><input type='text' name='search_string' value='<?php echo htmlentities($req_search_string)?>' /></td>
             <td><input type='submit' class='submit' value='Search' /></td>
         </tr>
     </table>
     </form>
-    <?
+    <?php
 
     $categories = Category::allObjects();
 
@@ -195,7 +196,7 @@ if($display_mode == 'categories') {
     
         Note::Create($req_cat_id, $req_note_title, $req_note_text);
         
-    	header("Location: $PHP_SELF");
+    	header("Location: ".$_SERVER['PHP_SELF']);
     	exit;
     	
     } else if ($action == 'update') {
@@ -204,7 +205,7 @@ if($display_mode == 'categories') {
 
         $note->update($req_cat_id, $req_note_title, $req_note_text);
 
-    	header("Location: $PHP_SELF");
+    	header("Location: ".$_SERVER['PHP_SELF']);
     	exit;
 
     } else {
@@ -216,14 +217,14 @@ if($display_mode == 'categories') {
 
             $n = Note::NoteWithId($req_note_id);
             
-            $action_link = $PHP_SELF."?action=update&id=".$req_note_id;
+            $action_link = $_SERVER['PHP_SELF']."?action=update&id=".$req_note_id;
         } else {
             /////////////////////////
             echo "<h4>Create Note</h4>\n";
             /////////////////////////
 
             $n = null;
-            $action_link = $PHP_SELF."?action=create";
+            $action_link = $_SERVER['PHP_SELF']."?action=create";
         }
         
         echo "<table id=\"noteEdit\">\n";
@@ -296,9 +297,9 @@ if($display_mode == 'categories') {
 
 ?>
 
-<div id="footer"><?=$footer_text?></div>
+<div id="footer"><?php echo $footer_text?></div>
 
 </body>
 </html>
 
-<?ob_end_flush();?>
+<?php ob_end_flush(); ?>
